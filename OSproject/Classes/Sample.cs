@@ -10,64 +10,151 @@ namespace OSproject.Classes
 {
     class Sample
     {
-        public static int number { get; set; }
-        public IntPtr ProcessorAffinity { get; set; }
+        public static int number { get; set; }        
+        public static Process process { get; set; }
+        public static int offset { get; set; }
+        public static int cpuCount { get; set; }
+        public static int core_number { get; set; }
+        public static int thread_number { get; set; }
+
         public Sample()
         {
             number = -1;
-        }
+            
+        }        
         public static void DefaultJob()
         {
-            Thread t1 = new Thread(new ThreadStart(Sample.Job1));
-            Thread t2 = new Thread(new ThreadStart(Sample.Job2));
-            t1.Start();
-            t2.Start();
+            //Get the our application's process.
+            process = Process.GetCurrentProcess();
 
-            Process Proc = Process.GetCurrentProcess();
-            Proc.ProcessorAffinity = (IntPtr)(0x0001);
+            //Get the number of cpu cores number
+            cpuCount = Environment.ProcessorCount;
 
-            t1.Join();
-            t2.Join();
-            Console.WriteLine("Main thread: Call Join(), to wait until ThreadProc ends.");
+            //Get the current threads number in the cpu
+            offset = process.Threads.Count;
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-            Console.WriteLine("Main thread: ThreadProc.Join has returned.  Press Enter to end program.");
+            Console.WriteLine("Your CPU Cores Count : {0}", cpuCount);
+            Console.WriteLine("There is [{0}] threads are handled in the cpu.", offset);
+
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+            core_number = 1;
+            Console.WriteLine(">> Core Number : {0}", core_number);
+
+            thread_number = 4;
+            Console.WriteLine(">> Thread(s) Number : {0}", thread_number);
+            Thread[] threads = new Thread[thread_number];
+
+            Create_Thread();
+
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            //Refresh the process information in order to get the newest
+            //thread list.
+            process.Refresh();
+            Console.WriteLine("Number of Threads : {0}\n", process.Threads.Count);
+            LogThreadIds(process);
+
+            Core_Assign();
+
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             Console.ReadLine();
         }
-        public static void Job1()
+        public static void CustomJob()
         {
-            for (long i = 0; i < 200000; i++)
+            //Get the our application's process.
+            process = Process.GetCurrentProcess();
+
+            //Get the number of cpu cores number
+            cpuCount = Environment.ProcessorCount;
+
+            //Get the current threads number in the cpu
+            offset = process.Threads.Count;
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+            Console.WriteLine("Your CPU Cores Count : {0}", cpuCount);
+            Console.WriteLine("There is [{0}] threads are handled in the cpu.", offset);
+
+            Console.WriteLine(process.Threads.Count);
+            LogThreadIds(process);
+
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+            Console.Write(">> Core Number [must be less than {0}]: ", cpuCount);
+            core_number = Int32.Parse(Console.ReadLine());
+
+            Console.Write(">> Thread(s) Number [1,2,...,n] : ");
+            thread_number = Int32.Parse(Console.ReadLine());
+            
+
+            Create_Thread();
+
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            //Refresh the process information in order to get the newest
+            //thread list.
+            process.Refresh();
+            Console.WriteLine("Number of Threads : {0}\n", process.Threads.Count);
+            LogThreadIds(process);
+
+            Core_Assign();
+
+
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            Console.ReadLine();
+        }
+        public static void Create_Thread()
+        {
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            Console.WriteLine("Threads are starting ...");
+            for (long i = 0; i < thread_number; i++)
             {
-                Console.WriteLine("JOB[1]: {0}" , i);                
-                // Yield the rest of the time slice.
-                Thread.Sleep(100);
+                Thread t = new Thread(new ThreadStart(Job))
+                { 
+                    IsBackground = true 
+                };
+                t.Start();
+                Console.WriteLine("Thread [{0}] created.",i);
+            }           
+        }
+        public static void Core_Assign()
+        {
+            Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            Console.WriteLine("Core assigning ...");
+            for (int i = 0; i < thread_number; ++i)
+            {
+                if (core_number == 1)
+                {
+                    process.Threads[i + offset].ProcessorAffinity = (IntPtr)(1L << 0);
+                    Console.WriteLine("Thread [{0}] assign to core [{1}].", process.Threads[i + offset].Id, 1);
+                }
+                else
+                {
+                    process.Threads[i + offset].ProcessorAffinity = (IntPtr)(1L << (i % core_number));
+                    Console.WriteLine("Thread [{0}] assign to core [{1}].", process.Threads[i + offset].Id, i % core_number);
+                }
             }
         }
-        public static void Job2()
+        public static void Job()
         {
-            for (long i = 0; i < 200000; i++)
+            //some extreme loads.
+            for (long i = 0; i < 99999999; i++)
             {
-                Console.WriteLine("JOB[2]: {0}", i);
-                // Yield the rest of the time slice.
-                Thread.Sleep(100);
+                Random rand = new Random();
+                double a = rand.NextDouble();
+                a = Math.Sin(Math.Sin(a));
             }
         }
-        public static void Job3()
+        static void LogThreadIds(Process proc)
         {
-            for (long i = 0; i < 200000; i++)
+            //This will log out all the thread id binded to the process.
+            //It is used to test whether newly added threads are the latest elements
+            //in the collection.
+            Console.WriteLine("===Thread Ids===");
+            for (int i = 0; i < proc.Threads.Count; ++i)
             {
-                Console.WriteLine("JOB[2]: {0}", i);
-                // Yield the rest of the time slice.
-                Thread.Sleep(100);
+                Console.WriteLine(proc.Threads[i].Id);
             }
-        }
-        public static void ClearScreen()
-        {
-            for (long i = 0; i < 200 ; i++)
-            {
-                Console.Clear();
-                // Yield the rest of the time slice.
-                Thread.Sleep(1000);
-            }
+            Console.WriteLine("===End of Thread Ids===");
         }
     }
 }
