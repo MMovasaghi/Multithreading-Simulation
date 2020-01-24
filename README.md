@@ -1,8 +1,8 @@
 # Multithreading-Simulation
 
-### MultiThreading & MultiProcessing Simulation
-### 2020 Shahed University
-### MH.Movasaghinia
+#### MultiThreading & MultiProcessing Simulation
+#### Shahed University
+#### MH.Movasaghinia
 
 - **Multi-Threading Core Assigning**
 
