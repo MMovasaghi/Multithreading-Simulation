@@ -10,16 +10,22 @@ namespace OSproject
 {
     class Program
     {
-        public static string version = "2.1";
+        public static string version = "3.1";
         public static void JobSelect(int Select)
         {
             switch (Select)
             {
-                case 1:
-                    Sample.CustomJob();
+                case 11:
+                    MultiThreadingAndCoreAssigning.DefaultJob();
                     break;
-                case 2:
-                    Sample.DefaultJob();
+                case 12:
+                    MultiThreadingAndCoreAssigning.CustomJob();
+                    break;
+                case 21:
+                    ConcurrencyAndParallelism.DoConcurrency();
+                    break;
+                case 22:
+                    ConcurrencyAndParallelism.DoParallel();
                     break;
                 default:
                     break;

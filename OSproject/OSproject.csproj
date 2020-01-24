@@ -43,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ConcurrencyAndParallelism.cs" />
     <Compile Include="Classes\Menu.cs" />
-    <Compile Include="Classes\Sample.cs" />
+    <Compile Include="Classes\MultiThreadingAndCoreAssigning.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

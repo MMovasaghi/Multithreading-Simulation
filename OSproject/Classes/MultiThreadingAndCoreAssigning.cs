@@ -8,22 +8,33 @@ using System.Threading.Tasks;
 
 namespace OSproject.Classes
 {
-    class Sample
+    class MultiThreadingAndCoreAssigning
     {
-        public static int number { get; set; }        
+        public static string Title = "\t\t******************************************\n" +
+                                     "\t\t***   Multi-Threading Core Assigning   ***\n" +
+                                     "\t\t******************************************\n";
+
+        public static string Discription = " >> Discription :\n" +
+                                           " ---------------------------------------------------------------------------------\n" +
+                                           " |   In computer architecture, multithreading is the ability                     |\n" +
+                                           " |   of a central processing unit (CPU) (or a single core                        |\n" +
+                                           " |   in a multi-core processor) to provide multiple threads of                   |\n" +
+                                           " |   execution concurrently, supported by the operating system.                  |\n" +
+                                           " |   >> This approach differs from multiprocessing.                              |\n" +
+                                           " ---------------------------------------------------------------------------------\n";
+
+        public static long loop_number = 99999999;
         public static Process process { get; set; }
         public static int offset { get; set; }
         public static int cpuCount { get; set; }
         public static int core_number { get; set; }
         public static int thread_number { get; set; }
-
-        public Sample()
-        {
-            number = -1;
-            
-        }        
+                
         public static void DefaultJob()
         {
+            Console.Clear();
+            Menu.ShowTitle();
+            Console.WriteLine(MultiThreadingAndCoreAssigning.Title + MultiThreadingAndCoreAssigning.Discription);
             //Get the our application's process.
             process = Process.GetCurrentProcess();
 
@@ -40,10 +51,10 @@ namespace OSproject.Classes
             Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
             core_number = 1;
-            Console.WriteLine(">> Core Number : {0}", core_number);
+            Console.WriteLine(">> Core Count : {0}", core_number);
 
             thread_number = 4;
-            Console.WriteLine(">> Thread(s) Number : {0}", thread_number);
+            Console.WriteLine(">> Thread(s) Count : {0}", thread_number);
             Thread[] threads = new Thread[thread_number];
 
             Create_Thread();
@@ -80,10 +91,10 @@ namespace OSproject.Classes
 
             Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-            Console.Write(">> Core Number [must be less than {0}]: ", cpuCount);
+            Console.Write(">> Core Count [must be less than {0}]: ", cpuCount);
             core_number = Int32.Parse(Console.ReadLine());
 
-            Console.Write(">> Thread(s) Number [1,2,...,n] : ");
+            Console.Write(">> Thread(s) Count [1,2,...,n] : ");
             thread_number = Int32.Parse(Console.ReadLine());
             
 
@@ -137,7 +148,7 @@ namespace OSproject.Classes
         public static void Job()
         {
             //some extreme loads.
-            for (long i = 0; i < 99999999; i++)
+            for (long i = 0; i < loop_number; i++)
             {
                 Random rand = new Random();
                 double a = rand.NextDouble();
