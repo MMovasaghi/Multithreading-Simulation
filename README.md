@@ -1,7 +1,7 @@
 # MultiThreading & MultiProcessing Simulation
 
 #### Shahed University
-#### MH.Movasaghinia
+#### By: [MH.Movasaghinia](https://github.com/MMovasaghi)
 
 ## Content
 
