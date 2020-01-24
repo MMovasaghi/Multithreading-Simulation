@@ -43,10 +43,11 @@ namespace OSproject.Classes
                 }
             } while (ch < 0 || ch > 3);
 
-            if(ch == 1)
+            this.OpenTaskManager();
+
+            if (ch == 1)
             {
                 final = 10;
-                this.OpenTaskManager();
                 do
                 {
                     Console.Clear();

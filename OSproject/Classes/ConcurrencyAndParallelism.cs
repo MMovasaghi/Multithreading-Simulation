@@ -95,7 +95,6 @@ namespace OSproject.Classes
 
             Core_Assign();
 
-
             Console.WriteLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             Console.ReadLine();
         }
